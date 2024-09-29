@@ -1,11 +1,19 @@
 import Transaction from "../models/transaction-model.js";
 import Book from "../models/book-model.js";
+import User from "../models/user-model.js";
 
 export const issueBook = async (req, res) => {
   try {
     const { bookId, bookName, userId, issueDate } = req.body;
 
     const book = await Book.findOne({ bookId });
+
+    const user = await User.findOne({ userId });
+
+    if (!user) {
+      return res.status(404).json({ Message: "User not found" });
+    }
+
     if (!book || !book.available) {
       return res.status(404).json({ Message: "Book not available" });
     }
@@ -33,6 +41,12 @@ export const issueBook = async (req, res) => {
 export const returnBook = async (req, res) => {
   try {
     const { bookId, userId, returnDate } = req.body;
+
+    const user = await User.findOne({ userId });
+
+    if (!user) {
+      return res.status(404).json({ Message: "User not found" });
+    }
 
     const transaction = await Transaction.findOne({
       bookId,
@@ -75,7 +89,7 @@ export const getUsersListWhoIssuedBook = async (req, res) => {
 
     const transactions = await Transaction.find({
       bookId: book.bookId,
-    })
+    });
 
     const issuedPeople = transactions.map((transaction) => ({
       userId: transaction._id,
@@ -128,7 +142,13 @@ export const getListOfBookIssuedToPeole = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const transactions = await Transaction.find({ userId })
+    const user = await User.findOne({ userId });
+
+    if (!user) {
+      return res.status(404).json({ Message: "User not found" });
+    }
+
+    const transactions = await Transaction.find({ userId });
 
     const issuedBooks = transactions.map((transaction) => ({
       bookId: transaction.bookId,
