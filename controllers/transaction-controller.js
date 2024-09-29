@@ -157,6 +157,8 @@ export const getListOfBookIssuedToPeole = async (req, res) => {
       returnDate: transaction.returnDate,
     }));
 
+    if (issuedBooks.length === 0) return res.status(404).json({issuedBooks: "No Books Are issued to this user at the moment"})
+
     return res.status(200).json({ issuedBooks });
   } catch (error) {
     return res
