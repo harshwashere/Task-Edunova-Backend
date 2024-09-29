@@ -157,7 +157,12 @@ export const getListOfBookIssuedToPeole = async (req, res) => {
       returnDate: transaction.returnDate,
     }));
 
-    if (issuedBooks.length === 0) return res.status(404).json({issuedBooks: "No Books Are issued to this user at the moment"})
+    if (issuedBooks.length === 0)
+      return res
+        .status(404)
+        .json({
+          issuedBooks: "No Books Are issued to this user at the moment",
+        });
 
     return res.status(200).json({ issuedBooks });
   } catch (error) {
@@ -182,11 +187,18 @@ export const getListOfBookIssueInDateRange = async (req, res) => {
       .populate("userId");
 
     const issuedBooks = transactions.map((transaction) => ({
-      bookId: transaction.bookId._id,
-      bookName: transaction.bookId.bookName,
-      issuedTo: transaction.userId.name,
+      bookId: transaction._id,
+      bookName: transaction.bookName,
+      issuedTo: transaction.name,
       issueDate: transaction.issueDate,
     }));
+
+    if (issuedBooks.length === 0)
+      return res
+        .status(404)
+        .json({
+          issuedBooks: "No Books Are issued to this user at the moment",
+        });
 
     return res.status(200).json(issuedBooks);
   } catch (error) {
