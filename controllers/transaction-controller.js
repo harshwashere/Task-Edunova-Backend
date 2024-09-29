@@ -197,7 +197,7 @@ export const getListOfBookIssueInDateRange = async (req, res) => {
       return res
         .status(404)
         .json({
-          issuedBooks: "No Books Are issued to this user at the moment",
+          issuedBooks: "No books are issued in the given date range at the moment",
         });
 
     return res.status(200).json(issuedBooks);
